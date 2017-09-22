@@ -1,8 +1,7 @@
 language: node_js
 
 node_js:
-  - '5'
-  - '4'
+  - 'stable'
 
 #Echoue dès qu'une erreur intervient
 
@@ -21,7 +20,7 @@ before_script:
   - sh -e /etc/init.d/xvfb start
 
 script:
-  mocha test --recursive --watch
+  npm test
 
 #Variables d'environnement
 env:
