@@ -1,0 +1,29 @@
+language: node_js
+
+node_js:
+  - '5'
+  - '4'
+
+#Echoue dès qu'une erreur intervient
+
+matrix:
+  fast_finish: true
+
+cache:
+  directories:
+    - node_modules
+
+before_install:
+  - npm prune
+
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+
+script:
+  mocha test --recursive --watch
+
+#Variables d'environnement
+env:
+  global:
+    - NODE_ENV=production
