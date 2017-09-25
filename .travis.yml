@@ -1,7 +1,9 @@
 language: node_js
 node_js:
-  - "node"
-
+- node
 branches:
   only:
-    - master
+  - master
+notifications:
+  slack:
+    secure: s0oc2e1NWqXhwsGtTQndL32Y222J01g0HuWS+BKRwDHxxSvgirhTxOrxDh89kpyukeUNrVg+bpW1lfBWvwcQXO/iuBgkHVgYd9mTwF0WaoOGaAmeY9yjprfN8EHwFyrc9VnCDqvLx34JHFdvGjW8fAuVNSjd53MnFu9U0//t+q5m8CqoMBFOsP/INHHxy2qfkt5xUsKNgvrBPe4OEFIdf2wGm1w0lHCzY6UuGiFAwyzl/YzkaRUysTfO39KOMkuwS1wQ/JoCmX3QywasHIhuQz3oCjN7OtZ5ISir1eK3SjXUxYIJ8ZzcUAGKOPOMsVogQvOMsYStUDNvcACp4deKGG1oZPXDhrEUCsFV+INOr3MT2OgzNM2cLDyPyU1SjI79zGJdzompDjhPd7nypjbQlllKsk4Ioa8PGQXzjlPIM6WNfpwkLXZFkRtVzZMuahypoK2ZOUPVppkb+w9xQ+hZ4pxuBSVWlM6UVLJCB9B90aVTWJ3E4iXNkwDhPMNweYpBJ51A10Qq8oNRU2oz06wyWcLTKuUFSAnYS7B0rLAjLSglYyTn4aCbomvdyy7Ppt/sFpIdBGdlAhYc8jg57tMQ4otUTmulPYqHsX2QSVMkDib1SeAyFqTjdksfFPO7AJ4tLxgkntwDtBIKfgGOBBvoSyQ27BQyQMmYpdNXDnUVhzg=
