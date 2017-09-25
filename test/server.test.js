@@ -1,12 +1,18 @@
 var chai = require('chai');
+var chaiHttp = require('chai-http');
+var Server = require('./../src/server');
 var expect = chai.expect;
 
-var Server = require('./../src/server');
+chai.use(chaiHttp);
 
-describe('Server', function(){
-  it('getTasksOfTheDayList() should return 0', function(){
-    var Server = new Server([]);
-    expect(Server.getTasksOfTheDayList()).to.equal(0);
+
+describe('GET TasksListOfTheDay', function(){
+  it('GET should return json object', function(){
+    chai.request(server)
+    .get('/TasksListOfTheDay')
+    .end((err, res) => {
+      expect(res).to.be.json;
+      done();
+    });
   });
-
 });
