@@ -24,7 +24,7 @@ describe('GET TasksListOfTheDay', function(){
         type: 'integer'
       },
       due_date: {
-        type: 'date'
+        type: 'number'
       }
     }
   };
@@ -48,7 +48,7 @@ describe('GET TasksListOfTheDay', function(){
   });
   it('GET should return json object with the good schema', (done) => {
     chai.request(server).get('/TasksListOfTheDay').end((err, res) => {
-      expect(res).to.be.jsonSchema(taskJsonSchema);
+      expect(res.body).to.be.jsonSchema(taskJsonSchema);
       done();
     });
   });
