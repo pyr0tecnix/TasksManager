@@ -53,3 +53,12 @@ describe('GET tasks', function(){
     });
   });
 });
+
+describe('GET random page should return 404', function(){
+  it('GET should return with 404 status', (done) => {
+    chai.request(server).get('/random').end((err, res) => {
+      expect(res).to.have.status(404);
+      done();
+    });
+  });
+});
