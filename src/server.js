@@ -1,13 +1,13 @@
 var http = require('http');
 
-let task = {'id': 0, 'name': 'Hello world', 'status': 2, 'due_date': Date.now()};
-var server = http.createServer(function(req, res){
-  res.setHeader('content-type', 'application/json')
-  res.writeHead(200);
-  res.write(JSON.stringify(task));
-  res.end();
-});
+var express = require('express');
+var routes = require('./routes/routes.js');
+var api = express();
 
-server.listen(8080);
+routes(api);
+
+var server = api.listen(8080, () => {
+  console.log("API running on port 8080");
+});
 
 module.exports = server;

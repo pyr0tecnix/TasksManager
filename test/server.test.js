@@ -7,7 +7,7 @@ var expect = chai.expect;
 chai.use(chaiHttp);
 chai.use(chaiJsonSchema);
 
-describe('GET TasksListOfTheDay', function(){
+describe('GET tasks', function(){
   let taskJsonSchema = {
     title: 'Task schema',
     type: 'object',
@@ -29,25 +29,25 @@ describe('GET TasksListOfTheDay', function(){
     }
   };
   it('GET should return with 200 status', (done) => {
-    chai.request(server).get('/TasksListOfTheDay').end((err, res) => {
+    chai.request(server).get('/tasks').end((err, res) => {
       expect(res).to.have.status(200);
       done();
     });
   });
   it('GET should return with application/json header', (done) => {
-    chai.request(server).get('/TasksListOfTheDay').end((err, res) => {
-      expect(res).to.have.header('content-type', 'application/json');
+    chai.request(server).get('/tasks').end((err, res) => {
+      expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
       done();
     });
   });
   it('GET should return json object', (done) => {
-    chai.request(server).get('/TasksListOfTheDay').end((err, res) => {
+    chai.request(server).get('/tasks').end((err, res) => {
       expect(res).to.be.json;
       done();
     });
   });
   it('GET should return json object with the good schema', (done) => {
-    chai.request(server).get('/TasksListOfTheDay').end((err, res) => {
+    chai.request(server).get('/tasks').end((err, res) => {
       expect(res.body).to.be.jsonSchema(taskJsonSchema);
       done();
     });
