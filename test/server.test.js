@@ -62,3 +62,12 @@ describe('GET random page should return 404', function(){
     });
   });
 });
+
+describe('POST tasks', function(){
+  it('POST should return with 201 status', (done) => {
+    chai.request(server).post('/tasks').end((err, res) => {
+      expect(res).to.have.status(201);
+      done();
+    });
+  });
+});
