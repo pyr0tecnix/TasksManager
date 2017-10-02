@@ -7,27 +7,28 @@ var expect = chai.expect;
 chai.use(chaiHttp);
 chai.use(chaiJsonSchema);
 
-describe('GET tasks', function(){
-  let taskJsonSchema = {
-    title: 'Task schema',
-    type: 'object',
-    required: ['id', 'name', 'status', 'due_date'],
-    properties: {
-      id: {
-        type:'integer',
-        minimum: 0
-      },
-      name: {
-        type: 'string'
-      },
-      status: {
-        type: 'integer'
-      },
-      due_date: {
-        type: 'number'
-      }
+let taskJsonSchema = {
+  title: 'Task schema',
+  type: 'object',
+  required: ['id', 'name', 'status', 'due_date'],
+  properties: {
+    id: {
+      type:'integer',
+      minimum: 0
+    },
+    name: {
+      type: 'string'
+    },
+    status: {
+      type: 'integer'
+    },
+    due_date: {
+      type: 'number'
     }
-  };
+  }
+};
+
+describe('GET tasks', function(){
   it('GET should return with 200 status', (done) => {
     chai.request(server).get('/tasks').end((err, res) => {
       expect(res).to.have.status(200);
@@ -64,9 +65,26 @@ describe('GET random page should return 404', function(){
 });
 
 describe('POST tasks', function(){
+  let task = {'id': 0, 'name': 'Hello world', 'status': 2, 'due_date': Date.now()};
+
   it('POST should return with 201 status', (done) => {
     chai.request(server).post('/tasks').end((err, res) => {
       expect(res).to.have.status(201);
+      done();
+    });
+  });
+  it('POST should return with application/json header', (done) => {
+    chai.request(server).post('/tasks').send(task).end((err, res) => {
+      expect(res).to.have.header('content-type', 'application/json');
+      done();
+    });
+  });
+  it('POST should be called with json object with the good schema', (done) => {
+    chai.request(server).post('/tasks').end((err, res) => {
+      expect(res.body).to.have.property('id');
+      expect(res.body).to.have.property('name');
+      expect(res.body).to.have.property('status');
+      expect(res.body).to.have.property('due_date');
       done();
     });
   });
