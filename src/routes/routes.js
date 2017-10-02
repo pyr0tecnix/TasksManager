@@ -5,6 +5,9 @@ var apiRouter = (api) => {
     res.setHeader('Content-type', 'application/json');
     res.status(200).send(JSON.stringify(task));
   });
+  api.post('/tasks', (req, res) => {
+    res.status(201).send();
+  });
 }
 
 module.exports = apiRouter;
