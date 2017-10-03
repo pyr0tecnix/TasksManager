@@ -65,7 +65,7 @@ describe('GET random page should return 404', function(){
 });
 
 describe('POST tasks', function(){
-  let task = {'id': 0, 'name': 'Hello world', 'status': 2, 'due_date': Date.now()};
+  let task = {'id': 0, 'name': 'Hello world', 'status': 1, 'due_date': Date.now()};
 
   it('POST should return with 201 status', (done) => {
     chai.request(server).post('/tasks').end((err, res) => {
@@ -74,17 +74,17 @@ describe('POST tasks', function(){
     });
   });
   it('POST should return with application/json header', (done) => {
-    chai.request(server).post('/tasks').send(task).end((err, res) => {
+    chai.request(server).post('/tasks').end((err, res) => {
       expect(res).to.have.header('content-type', 'application/json');
       done();
     });
   });
   it('POST should be called with json object with the good schema', (done) => {
-    chai.request(server).post('/tasks').end((err, res) => {
-      expect(res.body).to.have.property('id');
-      expect(res.body).to.have.property('name');
-      expect(res.body).to.have.property('status');
-      expect(res.body).to.have.property('due_date');
+    chai.request(server).post('/tasks').send(task).end((err, res) => {
+      expect(res.request._data).to.have.property('id');
+      expect(res.request._data).to.have.property('name');
+      expect(res.request._data).to.have.property('status');
+      expect(res.request._data).to.have.property('due_date');
       done();
     });
   });
