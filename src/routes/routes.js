@@ -12,8 +12,14 @@ var apiRouter = (api) => {
     res.status(200).send(JSON.stringify(task));
   });
   api.post('/tasks', (req, res) => {
+    let obj = {table: []};
     res.setHeader('Content-type', 'application/json');
-    console.log(req.body);
+    if(JSON.stringify(req.body) != {}) {
+      console.log(req.body);
+      fs.appendFile(__dirname + '/../tasks.json', JSON.stringify(req.body), (err) => {
+        console.log(err);
+      });
+    }
     res.status(201).send();
   });
 }
