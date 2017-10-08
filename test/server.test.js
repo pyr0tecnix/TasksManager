@@ -55,6 +55,18 @@ describe('GET all tasks', function(){
       done();
     });
   });
+  it('GET should return json object', (done) => {
+    chai.request(server).get('/tasks').end((err, res) => {
+      expect(res).to.be.json;
+      done();
+    });
+  });
+  it('GET should return json object with the good schema', (done) => {
+    chai.request(server).get('/tasks').end((err, res) => {
+      expect(res.body).to.be.jsonSchema(taskJsonCollectionSchema);
+      done();
+    });
+  });
 });
 
 describe('GET detail task', function(){
