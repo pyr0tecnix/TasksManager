@@ -44,8 +44,14 @@ let taskJsonCollectionSchema = {
 
 describe('GET all tasks', function(){
   it('GET should return with 200 status', (done) => {
-    chai.request(server).get('/tasks/').end((err, res) => {
+    chai.request(server).get('/tasks').end((err, res) => {
       expect(res).to.have.status(200);
+      done();
+    });
+  });
+  it('GET should return with application/json header', (done) => {
+    chai.request(server).get('/tasks').end((err, res) => {
+      expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
       done();
     });
   });
