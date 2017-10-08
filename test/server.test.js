@@ -10,13 +10,16 @@ chai.use(chaiJsonSchema);
 let taskJsonSchema = {
   title: 'Task schema',
   type: 'object',
-  required: ['id', 'name', 'status', 'due_date'],
+  required: ['id', 'name', 'description', 'status', 'due_date'],
   properties: {
     id: {
       type:'integer',
       minimum: 0
     },
     name: {
+      type: 'string'
+    },
+    description: {
       type: 'string'
     },
     status: {
@@ -83,6 +86,7 @@ describe('POST tasks', function(){
     chai.request(server).post('/tasks').send(task).end((err, res) => {
       expect(res.request._data).to.have.property('id');
       expect(res.request._data).to.have.property('name');
+      expect(res.request._data).to.have.property('description');
       expect(res.request._data).to.have.property('status');
       expect(res.request._data).to.have.property('due_date');
       done();
