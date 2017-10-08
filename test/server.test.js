@@ -68,7 +68,7 @@ describe('GET random page should return 404', function(){
 });
 
 describe('POST tasks', function(){
-  let task = {'id': 0, 'name': 'Hello world', 'status': 1, 'due_date': Date.now()};
+  let task = {'id': 0, 'name': 'Hello world', 'description': 'Foo Bar', 'status': 1, 'due_date': Date.now()};
 
   it('POST should return with 201 status', (done) => {
     chai.request(server).post('/tasks').end((err, res) => {
