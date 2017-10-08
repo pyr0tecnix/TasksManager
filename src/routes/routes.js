@@ -1,4 +1,4 @@
-let task = {'id': 0, 'name': 'Hello world', 'status': 2, 'due_date': Date.now()};
+let task = {'id': 0, 'name': 'Hello world', 'description': 'Foo Bar', 'status': 2, 'due_date': Date.now()};
 let fs = require('fs');
 let bodyParser = require('body-parser');
 
