@@ -42,7 +42,16 @@ let taskJsonCollectionSchema = {
   }
 };
 
-describe('GET tasks', function(){
+describe('GET all tasks', function(){
+  it('GET should return with 200 status', (done) => {
+    chai.request(server).get('/tasks/').end((err, res) => {
+      expect(res).to.have.status(200);
+      done();
+    });
+  });
+});
+
+describe('GET detail task', function(){
   it('GET should return with 200 status', (done) => {
     chai.request(server).get('/tasks/:id').end((err, res) => {
       expect(res).to.have.status(200);
