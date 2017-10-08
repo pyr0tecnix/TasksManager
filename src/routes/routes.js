@@ -7,6 +7,10 @@ var apiRouter = (api) => {
 
   api.use(bodyParser.json());
 
+  api.get('/tasks', (req, res) => {
+    res.status(200).send('');
+  });
+
   api.get('/tasks/:id', (req, res) => {
     res.setHeader('Content-type', 'application/json');
     res.status(200).send(JSON.stringify(task));
@@ -15,9 +19,7 @@ var apiRouter = (api) => {
     let obj = {table: []};
     res.setHeader('Content-type', 'application/json');
     if(JSON.stringify(req.body) != {}) {
-      console.log(req.body);
       fs.appendFile(__dirname + '/../tasks.json', JSON.stringify(req.body), (err) => {
-        console.log(err);
       });
     }
     res.status(201).send();
