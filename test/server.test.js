@@ -8,36 +8,43 @@ chai.use(chaiHttp);
 chai.use(chaiJsonSchema);
 
 let taskJsonSchema = {
-  title: 'Task schema',
-  type: 'object',
-  required: ['id', 'name', 'description', 'status', 'due_date'],
-  properties: {
-    id: {
-      type:'integer',
-      minimum: 0
-    },
-    name: {
-      type: 'string'
-    },
-    description: {
-      type: 'string'
-    },
-    status: {
-      type: 'integer'
-    },
-    due_date: {
-      type: 'number'
+  definitions : {
+    'task' :
+    {
+      type: 'object',
+      required: ['id', 'name', 'description', 'status', 'due_date'],
+      properties: {
+        id: {
+          type:'integer',
+          minimum: 0
+        },
+        name: {
+          type: 'string'
+        },
+        description: {
+          type: 'string'
+        },
+        status: {
+          type: 'integer'
+        },
+        due_date: {
+          type: 'number'
+        }
+      }
     }
   }
 };
 
 let taskJsonCollectionSchema = {
-  title: 'Tasks schema',
-  type: 'object',
+  type: 'array',
   required: ['tasks'],
-  properties: {
-    tasks: {
-      type: 'array'
+  'tasks' :
+  {
+    type: 'object',
+    properties: {
+      items: {
+        type: { "$ref": "#/definitions/task" }
+      }
     }
   }
 };
