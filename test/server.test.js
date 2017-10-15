@@ -1,8 +1,15 @@
+process.env.NODE_ENV = 'test';
+
 var chai = require('chai');
 var chaiHttp = require('chai-http');
 var chaiJsonSchema = require('chai-json-schema');
-var server = require('./../src/server');
+var mongoose = require("mongoose");
 var expect = chai.expect;
+
+var server = require('./../src/server');
+
+var TaskSchema = require('./../src/data/schema');
+var TasksBDD = mongoose.model('TasksBDD', TaskSchema);
 
 chai.use(chaiHttp);
 chai.use(chaiJsonSchema);
@@ -50,6 +57,24 @@ let taskJsonCollectionSchema = {
 };
 
 describe('GET all tasks', function(){
+
+  beforeEach(function(done){
+    var newTask = new TasksBDD({
+      name: 'Level up',
+      description: 'Conquer the World',
+      status: 0,
+      due_date: Date.now()
+    });
+    newTask.save(function(err) {
+      done();
+    });
+  });
+  afterEach(function(done){
+    TasksBDD.collection.drop();
+    done();
+  });
+
+
   it('GET should return with 200 status', (done) => {
     chai.request(server).get('/tasks').end((err, res) => {
       expect(res).to.have.status(200);
