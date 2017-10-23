@@ -66,10 +66,18 @@ describe('GET all tasks', function(){
       due_date: Date.now()
     });
     newTask.save(function(err) {
-      done();
+      if(err) {
+        console.log(err);
+      }
     });
+    done();
   });
   afterEach(function(done){
+    TasksBDD.find({}, function(err, t){
+      if(err) {
+        console.log(err);
+      }
+    });
     TasksBDD.collection.drop();
     done();
   });

@@ -5,4 +5,4 @@ configMongoDB.mongoURI = {
   test: 'mongodb://localhost/tasksmanager-test'
 };
 
-module.exports = configMongoDB
+module.exports = configMongoDB;

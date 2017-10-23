@@ -7,3 +7,5 @@ var taskSchema = new Schema({
   status:   String,
   due_date: Number
 });
+
+module.exports = taskSchema;

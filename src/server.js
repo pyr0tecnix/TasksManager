@@ -6,13 +6,14 @@ var api = express();
 var mongoose = require('mongoose');
 var configMongoDB = require('./data/config');
 
-mongoose.connect(configMongoDB.mongoURI[api.settings.env], function(err, res) {
-  if(err) {
-    console.log('Error connecting to the database. ' + err);
-  } else {
+mongoose.connect(configMongoDB.mongoURI[api.settings.env], {useMongoClient: true}).then(
+  () => {
     console.log('Connected to Database: ' + configMongoDB.mongoURI[api.settings.env]);
+  },
+  err => {
+    console.log('Error connecting to the database. ' + err);
   }
-});
+);
 
 routes(api);
 

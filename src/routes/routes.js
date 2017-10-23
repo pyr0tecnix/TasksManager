@@ -2,18 +2,15 @@ let task_1 = {'id': 0, 'name': 'Hello world', 'description': 'Foo Bar', 'status'
 let task_2 = {'id': 1, 'name': 'Citation', 'description': 'There is no God up there', 'status': 3, 'due_date': Date.now()};
 let tasks = [task_1, task_2];
 
-let fs = require('fs');
-let bodyParser = require('body-parser');
-
+var fs = require('fs');
+var bodyParser = require('body-parser');
+var TaskController = require('./../data/controller');
 
 var apiRouter = (api) => {
 
   api.use(bodyParser.json());
 
-  api.get('/tasks', (req, res) => {
-    res.setHeader('Content-type', 'application/json');
-    res.status(200).send(JSON.stringify(tasks));
-  });
+  api.route('/tasks').get(TaskController.listAllTasks);
 
   api.get('/tasks/:id', (req, res) => {
     res.setHeader('Content-type', 'application/json');
