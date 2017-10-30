@@ -20,7 +20,7 @@ exports.listTaskDetails = function(req, res) {
   });
 };
 
-exports.AddNewTask = function(req, res) {
+exports.addNewTask = function(req, res) {
   let taskToSave = new Task(req.body);
   taskToSave.save(function(err, taskSaved){
     if(err) {
@@ -30,11 +30,20 @@ exports.AddNewTask = function(req, res) {
   });
 };
 
-exports.UpdateExistingTask = function(req, res) {
+exports.updateExistingTask = function(req, res) {
   Task.findOneAndUpdate({_id: req.params.id}, req.body, {new: true}, function(err, UpdatedTask) {
     if (err) {
       console.log(err);
     }
     res.json(UpdatedTask);
   });
+};
+
+exports.deleteExistingTask = function(req, res) {
+  Task.findByIdAndRemove({_id: req.params.id}, function(err) {
+    if(err) {
+      console.log(err);
+    }
+  });
+  res.json({});
 };

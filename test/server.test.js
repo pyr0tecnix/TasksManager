@@ -76,7 +76,7 @@ describe('Test API Endpoints', function() {
     }
   });
 
-  describe('GET all tasks', function() {
+  describe('Get all tasks', function() {
     it('GET should return with 200 status', (done) => {
       chai.request(server).get('/tasks').end((err, res) => {
         expect(res).to.have.status(200);
@@ -103,7 +103,7 @@ describe('Test API Endpoints', function() {
     });
   });
 
-  describe('GET detail task', function(){
+  describe('Get detail task', function(){
     it('GET should return with 200 status', (done) => {
       chai.request(server).get('/tasks/' + newTask1._id).end((err, res) => {
         expect(res).to.have.status(200);
@@ -182,11 +182,25 @@ describe('Test API Endpoints', function() {
     });
     it('PUT should be called with json object with the good schema', (done) => {
       chai.request(server).put('/tasks/' + newTask1._id).send(task).end((err, res) => {
-        console.log(res.body);
         expect(res.request._data).to.have.property('name');
         expect(res.request._data).to.have.property('description');
         expect(res.request._data).to.have.property('status');
         expect(res.request._data).to.have.property('due_date');
+        done();
+      });
+    });
+  });
+
+  describe('Delete a task', function() {
+    it('DELETE should return with 200 status', (done) => {
+      chai.request(server).delete('/tasks/' + newTask2._id).end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+    });
+    it('DELETE should return with application/json header', (done) => {
+      chai.request(server).delete('/tasks/' + newTask2._id).end((err, res) => {
+        expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
         done();
       });
     });

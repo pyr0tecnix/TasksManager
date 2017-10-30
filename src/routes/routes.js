@@ -12,12 +12,12 @@ var apiRouter = (api) => {
 
   api.route('/tasks')
     .get(TaskController.listAllTasks)
-    .post(TaskController.AddNewTask);
+    .post(TaskController.addNewTask);
 
   api.route('/tasks/:id')
     .get(TaskController.listTaskDetails)
-    .put(TaskController.UpdateExistingTask);
-
+    .put(TaskController.updateExistingTask)
+    .delete(TaskController.deleteExistingTask);
 }
 
 module.exports = apiRouter;
