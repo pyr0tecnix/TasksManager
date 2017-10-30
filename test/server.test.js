@@ -14,7 +14,7 @@ var TasksBDD = mongoose.model('TasksBDD', TaskSchema);
 chai.use(chaiHttp);
 chai.use(chaiJsonSchema);
 
-let taskJsonSchema = {
+var taskJsonSchema = {
   definitions : {
     'task' :
     {
@@ -42,7 +42,7 @@ let taskJsonSchema = {
   }
 };
 
-let taskJsonCollectionSchema = {
+var taskJsonCollectionSchema = {
   type: 'array',
   required: ['tasks'],
   'tasks' :
@@ -56,118 +56,120 @@ let taskJsonCollectionSchema = {
   }
 };
 
-describe('GET all tasks', function(){
-
-  beforeEach(function(done){
-    var newTask = new TasksBDD({
-      name: 'Level up',
-      description: 'Conquer the World',
-      status: 0,
-      due_date: Date.now()
-    });
-    newTask.save(function(err) {
-      if(err) {
-        console.log(err);
-      }
-    });
-    done();
+describe('Test API Endpoints', function() {
+  var newTask1 = new TasksBDD({
+    name: 'Concrete stuff to do',
+    description: 'Clean my bedroom',
+    status: 0,
+    due_date: Date.now()
   });
-  afterEach(function(done){
-    TasksBDD.find({}, function(err, t){
-      if(err) {
-        console.log(err);
-      }
-    });
-    TasksBDD.collection.drop();
-    done();
+  var newTask2 = new TasksBDD({
+    name: 'Be a better man',
+    description: 'Where to start ?',
+    status: 2,
+    due_date: Date.now()
+  });
+  newTask1.save(function(err) {
+    if(err) {
+      console.log(err);
+    }
+  });
+  newTask2.save(function(err) {
+    if(err) {
+      console.log(err);
+    }
   });
 
+  describe('GET all tasks', function() {
+    it('GET should return with 200 status', (done) => {
+      chai.request(server).get('/tasks').end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+    });
+    it('GET should return with application/json header', (done) => {
+      chai.request(server).get('/tasks').end((err, res) => {
+        expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
+        done();
+      });
+    });
+    it('GET should return json object', (done) => {
+      chai.request(server).get('/tasks').end((err, res) => {
+        expect(res).to.be.json;
+        done();
+      });
+    });
+    it('GET should return json object with the good schema', (done) => {
+      chai.request(server).get('/tasks').end((err, res) => {
+        expect(res.body).to.be.jsonSchema(taskJsonCollectionSchema);
+        console.log(res.body);
+        done();
+      });
+    });
+  });
 
-  it('GET should return with 200 status', (done) => {
-    chai.request(server).get('/tasks').end((err, res) => {
-      expect(res).to.have.status(200);
-      done();
+  describe('GET detail task', function(){
+    it('GET should return with 200 status', (done) => {
+      chai.request(server).get('/tasks/' + newTask1._id).end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+    });
+    it('GET should return with application/json header', (done) => {
+      chai.request(server).get('/tasks/' + newTask1._id).end((err, res) => {
+        expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
+        done();
+      });
+    });
+    it('GET should return json object', (done) => {
+      chai.request(server).get('/tasks/' + newTask1._id).end((err, res) => {
+        expect(res).to.be.json;
+        done();
+      });
+    });
+    it('GET should return json object with the good schema', (done) => {
+      chai.request(server).get('/tasks/' + newTask1._id).end((err, res) => {
+        expect(res.body).to.be.jsonSchema(taskJsonSchema);
+        console.log(res.body);
+        done();
+      });
     });
   });
-  it('GET should return with application/json header', (done) => {
-    chai.request(server).get('/tasks').end((err, res) => {
-      expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
-      done();
-    });
-  });
-  it('GET should return json object', (done) => {
-    chai.request(server).get('/tasks').end((err, res) => {
-      expect(res).to.be.json;
-      done();
-    });
-  });
-  it('GET should return json object with the good schema', (done) => {
-    chai.request(server).get('/tasks').end((err, res) => {
-      expect(res.body).to.be.jsonSchema(taskJsonCollectionSchema);
-      done();
-    });
-  });
-});
 
-describe('GET detail task', function(){
-  it('GET should return with 200 status', (done) => {
-    chai.request(server).get('/tasks/:id').end((err, res) => {
-      expect(res).to.have.status(200);
-      done();
+  describe('GET random page should return 404', function(){
+    it('GET should return with 404 status', (done) => {
+      chai.request(server).get('/random').end((err, res) => {
+        expect(res).to.have.status(404);
+        done();
+      });
     });
   });
-  it('GET should return with application/json header', (done) => {
-    chai.request(server).get('/tasks/:id').end((err, res) => {
-      expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
-      done();
-    });
-  });
-  it('GET should return json object', (done) => {
-    chai.request(server).get('/tasks/:id').end((err, res) => {
-      expect(res).to.be.json;
-      done();
-    });
-  });
-  it('GET should return json object with the good schema', (done) => {
-    chai.request(server).get('/tasks/:id').end((err, res) => {
-      expect(res.body).to.be.jsonSchema(taskJsonSchema);
-      done();
-    });
-  });
-});
 
-describe('GET random page should return 404', function(){
-  it('GET should return with 404 status', (done) => {
-    chai.request(server).get('/random').end((err, res) => {
-      expect(res).to.have.status(404);
-      done();
-    });
-  });
-});
+  describe('POST tasks', function(){
+    let task = {'id': 0, 'name': 'Hello world', 'description': 'Foo Bar', 'status': 1, 'due_date': Date.now()};
 
-describe('POST tasks', function(){
-  let task = {'id': 0, 'name': 'Hello world', 'description': 'Foo Bar', 'status': 1, 'due_date': Date.now()};
-
-  it('POST should return with 201 status', (done) => {
-    chai.request(server).post('/tasks').end((err, res) => {
-      expect(res).to.have.status(201);
-      done();
+    it('POST should return with 201 status', (done) => {
+      chai.request(server).post('/tasks').end((err, res) => {
+        expect(res).to.have.status(201);
+        done();
+      });
+    });
+    it('POST should return with application/json header', (done) => {
+      chai.request(server).post('/tasks').end((err, res) => {
+        expect(res).to.have.header('content-type', 'application/json');
+        done();
+      });
+    });
+    it('POST should be called with json object with the good schema', (done) => {
+      chai.request(server).post('/tasks').send(task).end((err, res) => {
+        expect(res.request._data).to.have.property('id');
+        expect(res.request._data).to.have.property('name');
+        expect(res.request._data).to.have.property('description');
+        expect(res.request._data).to.have.property('status');
+        expect(res.request._data).to.have.property('due_date');
+        done();
+      });
     });
   });
-  it('POST should return with application/json header', (done) => {
-    chai.request(server).post('/tasks').end((err, res) => {
-      expect(res).to.have.header('content-type', 'application/json');
-      done();
-    });
-  });
-  it('POST should be called with json object with the good schema', (done) => {
-    chai.request(server).post('/tasks').send(task).end((err, res) => {
-      expect(res.request._data).to.have.property('id');
-      expect(res.request._data).to.have.property('name');
-      expect(res.request._data).to.have.property('description');
-      expect(res.request._data).to.have.property('status');
-      expect(res.request._data).to.have.property('due_date');
-      done();
-    });
-  });
+  TasksBDD.collection.drop();
 });

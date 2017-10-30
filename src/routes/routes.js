@@ -11,11 +11,7 @@ var apiRouter = (api) => {
   api.use(bodyParser.json());
 
   api.route('/tasks').get(TaskController.listAllTasks);
-
-  api.get('/tasks/:id', (req, res) => {
-    res.setHeader('Content-type', 'application/json');
-    res.status(200).send(JSON.stringify(task_1));
-  });
+  api.route('/tasks/:id').get(TaskController.listTaskDetails);
   api.post('/tasks', (req, res) => {
     let obj = {table: []};
     res.setHeader('Content-type', 'application/json');
