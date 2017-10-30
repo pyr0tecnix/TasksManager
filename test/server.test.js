@@ -19,12 +19,8 @@ var taskJsonSchema = {
     'task' :
     {
       type: 'object',
-      required: ['id', 'name', 'description', 'status', 'due_date'],
+      required: ['name', 'description', 'status', 'due_date'],
       properties: {
-        id: {
-          type:'integer',
-          minimum: 0
-        },
         name: {
           type: 'string'
         },
@@ -102,7 +98,6 @@ describe('Test API Endpoints', function() {
     it('GET should return json object with the good schema', (done) => {
       chai.request(server).get('/tasks').end((err, res) => {
         expect(res.body).to.be.jsonSchema(taskJsonCollectionSchema);
-        console.log(res.body);
         done();
       });
     });
@@ -130,7 +125,6 @@ describe('Test API Endpoints', function() {
     it('GET should return json object with the good schema', (done) => {
       chai.request(server).get('/tasks/' + newTask1._id).end((err, res) => {
         expect(res.body).to.be.jsonSchema(taskJsonSchema);
-        console.log(res.body);
         done();
       });
     });
@@ -145,8 +139,8 @@ describe('Test API Endpoints', function() {
     });
   });
 
-  describe('POST tasks', function(){
-    let task = {'id': 0, 'name': 'Hello world', 'description': 'Foo Bar', 'status': 1, 'due_date': Date.now()};
+  describe('Add new task', function() {
+    let task = {'name': 'Hello world', 'description': 'Foo Bar', 'status': 1, 'due_date': Date.now()};
 
     it('POST should return with 201 status', (done) => {
       chai.request(server).post('/tasks').end((err, res) => {
@@ -156,13 +150,12 @@ describe('Test API Endpoints', function() {
     });
     it('POST should return with application/json header', (done) => {
       chai.request(server).post('/tasks').end((err, res) => {
-        expect(res).to.have.header('content-type', 'application/json');
+        expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
         done();
       });
     });
     it('POST should be called with json object with the good schema', (done) => {
       chai.request(server).post('/tasks').send(task).end((err, res) => {
-        expect(res.request._data).to.have.property('id');
         expect(res.request._data).to.have.property('name');
         expect(res.request._data).to.have.property('description');
         expect(res.request._data).to.have.property('status');
@@ -171,5 +164,33 @@ describe('Test API Endpoints', function() {
       });
     });
   });
+
+  describe('Update a task', function() {
+    let task = {'name': 'Hello darkness my old friend', 'description': 'I come to talk with you again', 'status': 1, 'due_date': Date.now()};
+
+    it('PUT should return with 200 status', (done) => {
+      chai.request(server).put('/tasks/' + newTask1._id).end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+    });
+    it('PUT should return with application/json header', (done) => {
+      chai.request(server).put('/tasks/' + newTask1._id).end((err, res) => {
+        expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
+        done();
+      });
+    });
+    it('PUT should be called with json object with the good schema', (done) => {
+      chai.request(server).put('/tasks/' + newTask1._id).send(task).end((err, res) => {
+        console.log(res.body);
+        expect(res.request._data).to.have.property('name');
+        expect(res.request._data).to.have.property('description');
+        expect(res.request._data).to.have.property('status');
+        expect(res.request._data).to.have.property('due_date');
+        done();
+      });
+    });
+  });
+
   TasksBDD.collection.drop();
 });

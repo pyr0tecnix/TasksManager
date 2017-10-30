@@ -13,11 +13,28 @@ exports.listAllTasks = function(req, res) {
 
 exports.listTaskDetails = function(req, res) {
   Task.findById(req.params.id, function(err, task) {
-    console.log('Params :', req.params);
     if(err) {
       res.send(err);
-      console.log('E : ', err);
     }
     res.json(task);
+  });
+};
+
+exports.AddNewTask = function(req, res) {
+  let taskToSave = new Task(req.body);
+  taskToSave.save(function(err, taskSaved){
+    if(err) {
+      console.log(err);
+    }
+    res.status(201).json(taskSaved);
+  });
+};
+
+exports.UpdateExistingTask = function(req, res) {
+  Task.findOneAndUpdate({_id: req.params.id}, req.body, {new: true}, function(err, UpdatedTask) {
+    if (err) {
+      console.log(err);
+    }
+    res.json(UpdatedTask);
   });
 };

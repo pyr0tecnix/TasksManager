@@ -10,17 +10,14 @@ var apiRouter = (api) => {
 
   api.use(bodyParser.json());
 
-  api.route('/tasks').get(TaskController.listAllTasks);
-  api.route('/tasks/:id').get(TaskController.listTaskDetails);
-  api.post('/tasks', (req, res) => {
-    let obj = {table: []};
-    res.setHeader('Content-type', 'application/json');
-    if(JSON.stringify(req.body) != {}) {
-      fs.appendFile(__dirname + '/../tasks.json', JSON.stringify(req.body), (err) => {
-      });
-    }
-    res.status(201).send();
-  });
+  api.route('/tasks')
+    .get(TaskController.listAllTasks)
+    .post(TaskController.AddNewTask);
+
+  api.route('/tasks/:id')
+    .get(TaskController.listTaskDetails)
+    .put(TaskController.UpdateExistingTask);
+
 }
 
 module.exports = apiRouter;
