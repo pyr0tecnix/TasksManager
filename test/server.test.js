@@ -57,13 +57,19 @@ describe('Test API Endpoints', function() {
     name: 'Concrete stuff to do',
     description: 'Clean my bedroom',
     status: 0,
-    due_date: Date.now()
+    due_date: new Date().setDate(new Date().getDate() - 1)
   });
   var newTask2 = new TasksBDD({
     name: 'Be a better man',
     description: 'Where to start ?',
-    status: 2,
+    status: 1,
     due_date: Date.now()
+  });
+  var newTask3 = new TasksBDD({
+    name: 'Sleep',
+    description: 'All day long',
+    status: 2,
+    due_date: new Date().setDate(new Date().getDate() + 1)
   });
   newTask1.save(function(err) {
     if(err) {
@@ -75,7 +81,11 @@ describe('Test API Endpoints', function() {
       console.log(err);
     }
   });
-
+  newTask3.save(function(err) {
+    if(err) {
+      console.log(err);
+    }
+  });
   describe('Get all tasks', function() {
     it('GET should return with 200 status', (done) => {
       chai.request(server).get('/tasks').end((err, res) => {
@@ -102,6 +112,39 @@ describe('Test API Endpoints', function() {
       });
     });
   });
+
+describe('Get all the tasks of today', function() {
+  it('GET should return with 200 satus', (done) => {
+    chai.request(server).get('/tasks/today').end((err, res) => {
+      expect(res).to.have.status(200);
+      done();
+    });
+  });
+  it('GET should return with application/json header', (done) => {
+    chai.request(server).get('/tasks/today').end((err, res) => {
+      expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
+      done();
+    });
+  });
+  it('GET should return json object', (done) => {
+    chai.request(server).get('/tasks/today').end((err, res) => {
+      expect(res).to.be.json;
+      done();
+    });
+  });
+  it('GET should return json object with the good schema', (done) => {
+    chai.request(server).get('/tasks/today').end((err, res) => {
+      expect(res.body).to.be.jsonSchema(taskJsonCollectionSchema);
+      done();
+    });
+  });
+  it('GET should return task with due_date less or equal to today', (done) => {
+    chai.request(server).get('/tasks/today').end((err, res) => {
+      expect(res.body).to.have.lengthOf(2);
+      done();
+    });
+  });
+});
 
   describe('Get detail task', function(){
     it('GET should return with 200 status', (done) => {

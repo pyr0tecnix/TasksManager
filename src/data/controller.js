@@ -11,6 +11,16 @@ exports.listAllTasks = function(req, res) {
   });
 };
 
+exports.listAllTasksOfToday = function(req, res) {
+  let currentDate = Date.now();
+  Task.find({'due_date': {'$lte': currentDate}}, function(err, tasks) {
+    if(err) {
+      res.send(err);
+    }
+    res.json(tasks);
+  });
+}
+
 exports.listTaskDetails = function(req, res) {
   Task.findById(req.params.id, function(err, task) {
     if(err) {
