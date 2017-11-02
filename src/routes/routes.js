@@ -9,6 +9,7 @@ var TaskController = require('./../data/controller');
 var apiRouter = (api) => {
 
   api.use(bodyParser.json());
+  api.use(bodyParser.urlencoded({extended: false}));
 
   api.route('/tasks')
     .get(TaskController.listAllTasks)
