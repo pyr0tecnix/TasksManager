@@ -53,23 +53,28 @@ var taskJsonCollectionSchema = {
 };
 
 describe('Test API Endpoints', function() {
+  let date1 = new Date();
+  let date2 = new Date();
+
+  date1.setHours(0,0,0,0);
+  date2.setHours(0,0,0,0);
   var newTask1 = new TasksBDD({
-    name: 'Concrete stuff to do',
+    name: 'Yesterday : Concrete stuff to do',
     description: 'Clean my bedroom',
     status: 0,
-    due_date: new Date().setDate(new Date().getDate() - 1)
+    due_date: date1.setDate(new Date().getDate() - 1)
   });
   var newTask2 = new TasksBDD({
-    name: 'Be a better man',
+    name: 'Today : Be a better man',
     description: 'Where to start ?',
     status: 1,
-    due_date: Date.now()
+    due_date: (new Date()).setHours(0,0,0,0)
   });
   var newTask3 = new TasksBDD({
-    name: 'Sleep',
+    name: 'Tomorrow : Sleep',
     description: 'All day long',
     status: 2,
-    due_date: new Date().setDate(new Date().getDate() + 1)
+    due_date: date2.setDate(new Date().getDate() + 1)
   });
   newTask1.save(function(err) {
     if(err) {
@@ -113,38 +118,66 @@ describe('Test API Endpoints', function() {
     });
   });
 
-describe('Get all the tasks of today', function() {
-  it('GET should return with 200 satus', (done) => {
-    chai.request(server).get('/tasks/today').end((err, res) => {
-      expect(res).to.have.status(200);
-      done();
+  describe('Get all the tasks of today', function() {
+    it('GET should return with 200 satus', (done) => {
+      chai.request(server).get('/tasks/today').end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+    });
+    it('GET should return with application/json header', (done) => {
+      chai.request(server).get('/tasks/today').end((err, res) => {
+        expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
+        done();
+      });
+    });
+    it('GET should return json object', (done) => {
+      chai.request(server).get('/tasks/today').end((err, res) => {
+        expect(res).to.be.json;
+        done();
+      });
+    });
+    it('GET should return json object with the good schema', (done) => {
+      chai.request(server).get('/tasks/today').end((err, res) => {
+        expect(res.body).to.be.jsonSchema(taskJsonCollectionSchema);
+        done();
+      });
+    });
+    it('GET should return task with due_date less or equal to today', (done) => {
+      chai.request(server).get('/tasks/today').end((err, res) => {
+        expect(res.body).to.have.lengthOf(2);
+        done();
+      });
     });
   });
-  it('GET should return with application/json header', (done) => {
-    chai.request(server).get('/tasks/today').end((err, res) => {
-      expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
-      done();
+
+  describe('Get all the tasks of given day', function() {
+    it('GET should return with 200 status', (done) => {
+      chai.request(server).get('/tasks/day').query({ 'date': (new Date().setHours(0,0,0,0))}).end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+    });
+    it('GET should return with application/json header', (done) => {
+      chai.request(server).get('/tasks/day').query({ 'date': (new Date().setHours(0,0,0,0))}).end((err, res) => {
+        expect(res).to.have.header('content-type', 'application/json; charset=utf-8');
+        done();
+      });
+    });
+    it('GET should return json object', (done) => {
+      chai.request(server).get('/tasks/day').query({ 'date': (new Date().setHours(0,0,0,0))}).end((err, res) => {
+        expect(res).to.be.json;
+        done();
+      });
+    });
+    it('GET should return json object with the good schema', (done) => {
+      chai.request(server).get('/tasks/day').query({ 'date': (new Date().setHours(0,0,0,0))}).end((err, res) => {
+        expect(res.body).to.be.jsonSchema(taskJsonCollectionSchema);
+        done();
+      });
     });
   });
-  it('GET should return json object', (done) => {
-    chai.request(server).get('/tasks/today').end((err, res) => {
-      expect(res).to.be.json;
-      done();
-    });
-  });
-  it('GET should return json object with the good schema', (done) => {
-    chai.request(server).get('/tasks/today').end((err, res) => {
-      expect(res.body).to.be.jsonSchema(taskJsonCollectionSchema);
-      done();
-    });
-  });
-  it('GET should return task with due_date less or equal to today', (done) => {
-    chai.request(server).get('/tasks/today').end((err, res) => {
-      expect(res.body).to.have.lengthOf(2);
-      done();
-    });
-  });
-});
+
 
   describe('Get detail task', function(){
     it('GET should return with 200 status', (done) => {

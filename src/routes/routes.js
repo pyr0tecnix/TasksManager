@@ -15,8 +15,11 @@ var apiRouter = (api) => {
     .get(TaskController.listAllTasks)
     .post(TaskController.addNewTask);
 
-  api.route('(/tasks/today)')
+  api.route('/tasks/today')
     .get(TaskController.listAllTasksOfToday);
+
+  api.route('/tasks/day')
+    .get(TaskController.listAllTasksOfDay);
 
   api.route('/tasks/:id')
     .get(TaskController.listTaskDetails)
